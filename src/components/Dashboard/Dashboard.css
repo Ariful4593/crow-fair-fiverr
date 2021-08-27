@@ -1,0 +1,36 @@
+.dashboard-area{
+    max-width: 100% !important;
+}
+.dashboard-area a{
+    text-decoration: none;
+    color: gray;
+}
+
+.list-area{
+    height: 560px !important;
+    background-color: orange;
+    overflow: scroll;
+}
+.user-data{
+    max-width: 100% !important;
+    width: 100% !important;
+}
+.lang-and-lat, .lang-and-lat-edit, .client-edit{
+    cursor: pointer;
+    font-size: 12px;
+    font-style: italic;
+}
+.lang-and-lat-edit, .client-edit{
+    text-align: center;
+}
+.tr2, .tr3{
+    font-size: 12px;
+}
+.tr3{
+    font-style: italic;
+    text-align: center;
+}
+
+.makeStyles-formControl-18, .makeStyles-formControl-6{
+    width: 100% !important;
+}
