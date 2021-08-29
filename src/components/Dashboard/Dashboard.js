@@ -6,7 +6,6 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import './Dashboard.css';
-import Maps from '../Maps/Maps';
 import { collectionContext } from '../../App';
 import {
     Link
@@ -15,9 +14,10 @@ import {
 import { fade } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Maps from '../Maps/Maps';
+
 
 import deleteIcon from '../../images/delete.png';
-
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -103,22 +103,31 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = () => {
     const classes = useStyles();
 
-    const { value1 } = useContext(collectionContext);
+    const { value1, value2 } = useContext(collectionContext);
     const [, setLongAndLat] = value1;
-    const handleLngAndLat = (lat, lng) => {
-        const center = {
-            lat: lat,
-            lng: lng
-        };
-        setLongAndLat(center);
+    const [alllng, setAlllng] = value2;
+    const handleLngAndLat = (centerPos) => {
+        setLongAndLat(centerPos);
     }
 
     const [userData, setUserData] = useState([])
     useEffect(() => {
-        fetch('http://localhost:4000/userData')
-            .then(res => res.json())
-            .then(data => setUserData(data))
-    }, [])
+        let isMounted = true;
+
+        try {
+            fetch('https://secure-everglades-52808.herokuapp.com/userData')
+                .then(res => res.json())
+                .then(data => {
+                    if (isMounted) {
+                        setUserData(data)
+                        setAlllng(data);
+                    }
+                })
+        } catch (err) {
+
+        }
+        return () => { isMounted = false };
+    }, [alllng])
 
 
     return (
@@ -155,8 +164,8 @@ const Dashboard = () => {
 
                                                 <AccordionSummary
                                                     expandIcon={<ExpandMoreIcon />}
-                                                    aria-controls={`panel${data.areaControls}a-content`}
-                                                    id={`panel${data.id}a-header`}
+                                                    aria-controls={`panel${index}a-content`}
+                                                    id={`panel${index}a-header`}
                                                 >
                                                     <Typography className={classes.heading}><strong>{data.menuTitle}</strong></Typography>
                                                 </AccordionSummary>
@@ -164,22 +173,22 @@ const Dashboard = () => {
                                                     <div className="user-data">
                                                         <div className="row">
                                                             <div className="col-3">
-                                                                <p>{data.position}</p>
+                                                                <p>Position</p>
                                                             </div>
                                                             <div className="col-6">
-                                                                <p onClick={() => handleLngAndLat(data.lat, data.lng)} className="lang-and-lat">{`${data.lat}, ${data.lng}`}</p>
+                                                                <p onClick={() => handleLngAndLat(data.newPosition)} className="lang-and-lat">{`${data.newPosition.lat}, ${data.newPosition.lng}`}</p>
                                                             </div>
                                                             <div className="col-3">
-                                                                <p className="lang-and-lat-edit" >{data.positionStatus}</p>
+                                                                <p className="lang-and-lat-edit" >edit</p>
                                                             </div>
                                                         </div>
 
                                                         <div className="row">
                                                             <div className="col-3">
-                                                                <p>{data.client}</p>
+                                                                <p>Client</p>
                                                             </div>
                                                             <div className="col-6">
-                                                                <p>{data.tribe}</p>
+                                                                <p>{data.client}</p>
                                                             </div>
                                                             <div className="col-3">
                                                                 <Link to={`/client-edit/${data._id}`}>
@@ -192,56 +201,56 @@ const Dashboard = () => {
 
                                                         <div className="row">
                                                             <div className="col-3">
-                                                                <p>{data.type}</p>
+                                                                <p>Type</p>
                                                             </div>
                                                             <div className="col-6">
-                                                                <p className="tr2">{data.category}</p>
+                                                                <p className="tr2">{data.type}</p>
                                                             </div>
                                                             <div className="col-3">
                                                                 <Link to={`/type-edit/${data._id}`}>
-                                                                    <p className="tr3">{data.typeStatus}</p>
+                                                                    <p className="tr3">edit</p>
                                                                 </Link>
                                                             </div>
                                                         </div>
 
                                                         <div className="row">
                                                             <div className="col-3">
-                                                                <p>{data.serviceAge}</p>
+                                                                <p>Service Age</p>
                                                             </div>
                                                             <div className="col-6">
-                                                                <p className="tr2">{data.duration}</p>
+                                                                <p className="tr2">{data.serviceAge}</p>
                                                             </div>
                                                             <div className="col-3">
                                                                 <Link to={`/service-edit/${data._id}`} >
-                                                                    <p className="tr3">{data.serviceAgeStatus}</p>
+                                                                    <p className="tr3">edit</p>
                                                                 </Link>
                                                             </div>
                                                         </div>
 
                                                         <div className="row">
                                                             <div className="col-3">
-                                                                <p>{data.rent}</p>
+                                                                <p>Rented</p>
                                                             </div>
                                                             <div className="col-6">
-                                                                <p className="tr2">{data.rentState}</p>
+                                                                <p className="tr2">{data.rented}</p>
                                                             </div>
                                                             <div className="col-3">
                                                                 <Link to={`/rent-service/${data._id}`}>
-                                                                    <p className="tr3">{data.rentStatus}</p>
+                                                                    <p className="tr3">edit</p>
                                                                 </Link>
                                                             </div>
                                                         </div>
 
                                                         <div className="row">
                                                             <div className="col-3">
-                                                                <p>{data.service}</p>
+                                                                <p>Service</p>
                                                             </div>
                                                             <div className="col-6">
-                                                                <p className="tr2">{data.blank}</p>
+                                                                <p className="tr2"></p>
                                                             </div>
                                                             <div className="col-3">
                                                                 <Link to={`/add-service/${data._id}`}>
-                                                                    <p className="tr3">{data.plusServices}</p>
+                                                                    <p className="tr3">+Service</p>
                                                                 </Link>
                                                             </div>
                                                         </div>
@@ -294,7 +303,7 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <div className="col-md-8 p-0" style={{height: '100vh'}}>
+                <div className="col-md-8 p-0" style={{ height: '100vh' }}>
                     <Maps />
                 </div>
             </div>
@@ -302,4 +311,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default React.memo(Dashboard);

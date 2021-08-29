@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ServerModal() {
+const ServiceAgeDialog = () => {
     const classes = useStyles();
     const rootRef = React.useRef(null);
     const [open, setOpen] = useState(true);
@@ -45,7 +45,8 @@ export default function ServerModal() {
     const projectId = Math.random().toString(36).substring(7);
     const handleClose = () => {
         setOpen(false);
-        fetch('http://localhost:4000/serviceAgeUpdate', {
+        try{
+            fetch('https://secure-everglades-52808.herokuapp.com/serviceAgeUpdate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -58,6 +59,9 @@ export default function ServerModal() {
             .then(result => console.log(result))
             .catch(err => console.log(err))
         history.push('/')
+        }catch(err){
+            
+        }
     };
 
     return (
@@ -96,3 +100,5 @@ export default function ServerModal() {
         </div>
     );
 }
+
+export default React.memo(ServiceAgeDialog)

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ServerModal() {
+const DeleteService = () => {
     const classes = useStyles();
     const rootRef = React.useRef(null);
     const [open, setOpen] = React.useState(true);
@@ -40,20 +40,24 @@ export default function ServerModal() {
     const history = useHistory()
 
 
-    console.log(deleteServiceId, docId)
     const handleClose = (status) => {
         setOpen(false);
         if (status === 'Ok') {
-            fetch(`http://localhost:4000/deleteService/${deleteServiceId}/${docId}`, {
-                method: 'DELETE',
-            })
-                .then(res => res.json())
-                .then(result => console.log(result))
-                .catch(err => console.log(err))
+            try {
+                fetch(`https://secure-everglades-52808.herokuapp.com/deleteService/${deleteServiceId}/${docId}`, {
+                    method: 'DELETE',
+                })
+                    .then(res => res.json())
+                    .then(result => console.log(result))
+                    .catch(err => console.log(err))
+                history.push('/')
+            }catch(err){
+                console.log(err)
+            }
 
-            history.push('/')
-            window.location.reload()
-        }else{
+
+            // window.location.reload()
+        } else {
             history.push('/')
         }
 
@@ -87,3 +91,5 @@ export default function ServerModal() {
         </div>
     );
 }
+
+export default React.memo(DeleteService)

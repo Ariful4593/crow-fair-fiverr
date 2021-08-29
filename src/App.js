@@ -14,16 +14,20 @@ import RentedDialog from './components/RentedDialog/RentedDialog';
 import AddService from './components/AddService/AddService';
 import NewDateTime from './components/NewDateTime/NewDateTime';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import AddTribe from './components/AddTribe/AddTribe';
 
 export const collectionContext = createContext()
 function App() {
   const center = {
-    lat: 22.356852,
-    lng: 91.783180
+    lat: 45.59558868,
+    lng: -107.45098877
   };
   const [longAndLat, setLongAndLat] = useState(center);
+  const [alllng, setAlllng] = useState([]);
+
+  const [newAddservice, setNewAddService] = useState([])
   return (
-    <collectionContext.Provider value={{ value1: [longAndLat, setLongAndLat] }}>
+    <collectionContext.Provider value={{ value1: [longAndLat, setLongAndLat], value2: [alllng, setAlllng], value3: [newAddservice, setNewAddService] }}>
       <Router>
         <Switch>
           <PrivateRoute exact path="/">
@@ -56,6 +60,9 @@ function App() {
           </Route>
           <Route path="/newAdd-service/:addNewServiceId">
             <NewDateTime />
+          </Route>
+          <Route path="/addNew-tribe/:lat/:lng">
+            <AddTribe />
           </Route>
         </Switch>
       </Router>

@@ -1,6 +1,7 @@
 {
   "name": "login-system-app",
   "version": "0.1.0",
+  "homepage": "https://premiumsanitation.unit-tracking.com",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.4",
@@ -16,9 +17,13 @@
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.1",
     "react-dom": "^17.0.2",
+    "react-geocode": "^0.2.3",
+    "react-google-autocomplete": "^2.4.2",
+    "react-google-maps": "^9.4.5",
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "styled-components": "^5.3.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

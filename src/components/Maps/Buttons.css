@@ -1,0 +1,19 @@
+.add-button{
+    margin-top: -60px !important;
+    margin-left: 30% !important;
+}
+.add-button button{
+    background-color: rgb(178 180 183);
+    /* z-index: 105; */
+    position: absolute;
+
+}
+.add-button .person{
+    margin-top: -70px !important;
+    position: absolute;
+    margin-left: 170px !important;
+}
+.add-button img{
+    height: 40px;
+    width: 40px;
+}

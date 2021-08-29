@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import './Login.css';
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -54,7 +54,6 @@ const Login = () => {
         if (user.email && user.password) {
             firebase.auth().signInWithEmailAndPassword(user.email, user.password)
                 .then((userData) => {
-                    console.log(userData)
                     const newUser = { ...user };
                     newUser.error = '';
                     setUser(newUser);
@@ -96,14 +95,6 @@ const Login = () => {
                                 required
                             />
                         </p>
-
-                        <p className='text-left mb-2 px-3'>
-                            <input type='checkbox' name='checkbox' />
-                            <span className='ml-3'>Remember Me</span>
-                            <span className='float-right'>
-                                <Link to="">Forgot Password</Link>
-                            </span>
-                        </p>
                         <input
                             className='mt-3'
                             type='submit'
@@ -117,4 +108,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default React.memo(Login);

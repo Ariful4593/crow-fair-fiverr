@@ -1,83 +1,110 @@
 import React, { useContext } from 'react'
 import { GoogleMap, LoadScript, MarkerClusterer, Marker } from '@react-google-maps/api';
 import { collectionContext } from '../../App';
+import { useState } from 'react';
+import Buttons from './Buttons';
+import useGeoLocation from './useGeolocation';
+
+
 const containerStyle = {
   width: '100%',
   height: '100%'
 };
 
-
 function Maps() {
 
-  const { value1 } = useContext(collectionContext);
+  const { value1, value2 } = useContext(collectionContext);
   const [longAndLat] = value1;
 
-  const locations = [
-    { lat: 45.59558868, lng: -107.45098877 },
-    { lat: 45.59725952, lng: -107.45169830 },
-    { lat: 45.59764481, lng: -107.45288849 },
-    { lat: 45.59761810, lng: -107.45289612 },
-    { lat: 45.59756088, lng: -107.45290375 },
-    { lat: 45.59758759, lng: -107.45290375 },
-    { lat: 45.59754944, lng: -107.45335388 },
-    { lat: 45.59752655, lng: -107.45333099 },
-    { lat: 45.59749985, lng: -107.45330811 },
-    { lat: 45.59747696, lng: -107.45327759 },
-    { lat: 45.59455490, lng: -107.45500183 },
-    { lat: 45.59761429, lng: -107.45076752 },
-    { lat: 45.59765625, lng: -107.45078278 },
-    { lat: 45.59777832, lng: -107.45008087 },
-    { lat: 45.59777832, lng: -107.45004272 },
-    { lat: 45.59777832, lng: -107.45000458 },
-    { lat: 45.59777832, lng: -107.44997406 },
-    { lat: 45.59777832, lng: -107.44993591 },
-    { lat: 45.59778214, lng: -107.44989777 },
-    { lat: 45.59772110, lng: -107.44959259},
-    { lat: 45.59771729, lng: -107.44955444 },
-    { lat: 45.59745407, lng: -107.44847107 },
-    { lat: 45.59882355, lng: -107.44848633 },
-  ]
+  const [alllng] = value2;
 
   const options = {
     imagePath:
       'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m', // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
   }
 
-  function createKey(location) {
-    return location.lat + location.lng
+  // const onLoad = polyline => {
+  //   console.log('polyline: ', polyline)
+  // };
+
+
+  const [drag, setDrag] = useState({})
+
+  try {
+    var ltlng = {
+      lat: parseFloat(drag.latLng.lat()).toFixed(10),
+      lng: parseFloat(drag.latLng.lng()).toFixed(8)
+    }
+  }
+  catch (err) {
+    if (err === undefined) {
+      console.log('Data loading')
+    }
+  }
+  if (ltlng === undefined) {
+    ltlng = {
+      lat: 45.59558868,
+      lng: -107.45098877
+    }
   }
 
-  // const onLoad = marker => {
-  //   console.log('marker: ', marker)
-  // }
+
+  const [adminLocation, setAdminLocation] = useState()
+  const location = useGeoLocation();
+
+  const handleUser = () => {
+    location.loaded ? setAdminLocation(location.coordinates) : console.log("Location data not available yet.")
+  }
+
   return (
     <LoadScript
-      // AIzaSyA9pwzh8oq3MnIzgin15N13SZAqzylfYpE
-      //AIzaSyDwH2tsbAyowwhUu5OeVz2r4dEaYmwDiO4
-      //AIzaSyDeOEJ0wtvPT8ybmB4Uh4M_v4WMRo85uII
-      //AIzaSyAq_balT-STHRcA_BgA6H5Khfpzw6hUBk0
-      //AIzaSyCeKAgLlO9IYuxU3EQ35up438Gn0ZKLjCA
       googleMapsApiKey="AIzaSyAq_balT-STHRcA_BgA6H5Khfpzw6hUBk0"
     >
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={longAndLat}
+        center={adminLocation === undefined ? longAndLat : adminLocation}
         zoom={10}
       >
-        {/* <Marker
-          onLoad={onLoad}
-          position={longAndLat}
-        /> */}
-        
+
+        <Marker
+          onLoad={marker => {
+            const customIcon = (opts) => Object.assign({
+              path: 'M12.75 0l-2.25 2.25 2.25 2.25-5.25 6h-5.25l4.125 4.125-6.375 8.452v0.923h0.923l8.452-6.375 4.125 4.125v-5.25l6-5.25 2.25 2.25 2.25-2.25-11.25-11.25zM10.5 12.75l-1.5-1.5 5.25-5.25 1.5 1.5-5.25 5.25z',
+              fillColor: '#34495e',
+              fillOpacity: 1,
+              strokeColor: '#000',
+              strokeWeight: 1,
+              scale: 1,
+            }, opts);
+
+            marker.setIcon(customIcon({
+              fillColor: 'green',
+              strokeColor: 'white'
+            }));
+            // return markerLoadHandler(marker, place)
+          }}
+          position={adminLocation === undefined ? longAndLat : adminLocation}
+          draggable={true}
+          onDragEnd={(e) => setDrag(e)}
+          name="Current position"
+          title="Draggable Marker"
+        />
         <MarkerClusterer options={options}>
           {(clusterer) =>
-            locations.map((location) => (
-              <Marker key={createKey(location)} position={location} clusterer={clusterer} animation={2} />
+            alllng.map((location, index) => (
+              <Marker
+                key={index}
+                title={location.menuTitle}
+                position={location.newPosition}
+                clusterer={clusterer}
+              />
             ))
           }
         </MarkerClusterer>
-        
+
       </GoogleMap>
+
+      <Buttons handleUser={handleUser} lat={ltlng.lat} lng={ltlng.lng} />
     </LoadScript>
   )
 }

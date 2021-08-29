@@ -39,16 +39,17 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ServerModal() {
+const HandleClientDialog = () => {
     const classes = useStyles();
     const rootRef = React.useRef(null);
     const [open, setOpen] = React.useState(true);
     const [clientType, setClientType] = React.useState('Tribe');
-    const {clientId} = useParams();
+    const { clientId } = useParams();
     const history = useHistory()
 
     useEffect(() => {
-        fetch('http://localhost:4000/clientUpdate', {
+        try{
+            fetch('https://secure-everglades-52808.herokuapp.com/clientUpdate', {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -59,6 +60,9 @@ export default function ServerModal() {
             .then(res => res.json())
             .then(result => console.log(result))
             .catch(err => console.log(err))
+        }catch(err){
+            
+        }
 
     }, [clientType, clientId])
 
@@ -114,3 +118,5 @@ export default function ServerModal() {
         </div>
     );
 }
+
+export default React.memo(HandleClientDialog)

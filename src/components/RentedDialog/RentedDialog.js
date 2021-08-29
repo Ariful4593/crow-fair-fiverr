@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ServerModal() {
+const RentedDialog = () => {
     const classes = useStyles();
     const rootRef = React.useRef(null);
     const [open, setOpen] = React.useState(true);
@@ -48,7 +48,8 @@ export default function ServerModal() {
     const history = useHistory()
 
     useEffect(() => {
-        fetch('http://localhost:4000/rentUpdate', {
+        try{
+            fetch('https://secure-everglades-52808.herokuapp.com/rentUpdate', {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -59,6 +60,9 @@ export default function ServerModal() {
             .then(res => res.json())
             .then(result => console.log(result))
             .catch(err => console.log(err))
+        }catch(err){
+            
+        }
 
     }, [rentStatus, rentId])
 
@@ -114,3 +118,5 @@ export default function ServerModal() {
         </div>
     );
 }
+
+export default React.memo(RentedDialog)

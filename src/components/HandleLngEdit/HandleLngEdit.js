@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HandleLngEdit() {
+const HandleLngEdit = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [age, setAge] = React.useState('');
@@ -91,3 +91,5 @@ export default function HandleLngEdit() {
     </div>
   );
 }
+
+export default React.memo(HandleLngEdit)
